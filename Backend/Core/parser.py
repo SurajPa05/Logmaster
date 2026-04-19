@@ -36,18 +36,17 @@ def rawParsing():
         if not ErrorMessage or ErrorMessage == "None":
              continue
         NormErrorMessage = normalize(ErrorMessage)  
-        print(f"Source: {Source} | Priority: {Priority}")
-        print(f"TimeStamp: {datetime.fromtimestamp(TimeStamp)}")
-        print(f"BootId: {BootId}")
-        print(f"FromWhere: {FromWhere}")
-        print(f"ErrorMessage: {NormErrorMessage}")
-        print("-" * 80)
-        
-    print("Total Errors : ", count)
+        # print(f"Source: {Source} | Priority: {Priority}")
+        # print(f"TimeStamp: {datetime.fromtimestamp(TimeStamp)}")
+        # print(f"BootId: {BootId}")
+        # print(f"FromWhere: {FromWhere}")
+        # print(f"ErrorMessage: {NormErrorMessage}")
+        # print("-" * 80)
+        logs.append({
+            "source": Source,
+            "priority": int(Priority),
+            "message": NormErrorMessage,
+        })
 
+    return logs
 
-        # logs.append({
-        #     "source": Source,
-        #     "priority": int(Priority),
-        #     "message": ErrorMessage,
-        # })
