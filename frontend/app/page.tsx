@@ -1,53 +1,49 @@
 "use client"
 
-import { useState } from "react"
-import api from "@/lib/api"
-
-type Log = {
-  source: string
-  priority: number
-  message: string
-}
-
-type source_array = {
-  source: string
-}
+import { useState, useEffect } from "react"
+import { Sidebar } from "@/components/sidebar"
+import { Navbar } from "@/components/navbar"
+import { CommandPalette } from "@/components/command-palette"
+import { Dashboard } from "@/components/dashboard"
+import { LogStream } from "@/components/log-stream"
 
 export default function Home() {
-  const [logs, setLogs] = useState<Log[]>([])
+  const [activeView, setActiveView] = useState<"dashboard" | "terminal">("dashboard")
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
 
-  const fetchLogs = async () => {
-    try {
-      const res = await api.get<Log[]>("/logs")
-      console.log("DATA:", res.data)
-      setLogs(res.data)
-    } catch (err) {
-      console.error("ERROR:", err)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setIsCommandPaletteOpen(true)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
+
+  const handleCommandAction = (action: string) => {
+    if (action.startsWith("filter-")) {
+      setActiveView("terminal")
     }
   }
 
-   const [source_array, sourceupdate] = useState<source_array[]>([])
-   const sourcelist = async () => {
-    try{
-      const res = await api.get<source_array[]>("/sourcelist")
-      sourceupdate(res.data)
-    }catch(err){
-      console.error("ERROR:",err)
-    }
-   }
-  
-
-
   return (
-    <div style={{ padding: "20px" }}>
-      <button onClick={fetchLogs}>
-        Fetch Logs :
-      </button>
-      <pre>{JSON.stringify(logs, null, 2)}</pre>
-      <button onClick={sourcelist}>
-        source list Logs :
-      </button>
-      <pre>{JSON.stringify(source_array, null, 2)}</pre>
+    <div className="flex h-screen bg-background">
+      <Sidebar activeView={activeView} onViewChange={setActiveView} />
+      <Navbar onOpenCommandPalette={() => setIsCommandPaletteOpen(true)} />
+      
+      <main className="ml-60 mt-16 flex-1 overflow-auto p-6">
+        {activeView === "dashboard" ? <Dashboard /> : <LogStream />}
+      </main>
+
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        onNavigate={setActiveView}
+        onAction={handleCommandAction}
+      />
     </div>
   )
 }

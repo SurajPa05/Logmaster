@@ -25,7 +25,6 @@ def rawParsing():
     )
     count = 0
     for line in proc.stdout:
-        count += 1
         entry = json.loads(line)
         TimeStamp = int(entry.get("__REALTIME_TIMESTAMP", 0)) / 1_000_000        
         BootId = entry.get("_BOOT_ID", "") 
@@ -36,17 +35,14 @@ def rawParsing():
         if not ErrorMessage or ErrorMessage == "None":
              continue
         NormErrorMessage = normalize(ErrorMessage)  
-        # print(f"Source: {Source} | Priority: {Priority}")
-        # print(f"TimeStamp: {datetime.fromtimestamp(TimeStamp)}")
-        # print(f"BootId: {BootId}")
-        # print(f"FromWhere: {FromWhere}")
-        # print(f"ErrorMessage: {NormErrorMessage}")
-        # print("-" * 80)
+
+        # log_type: message:, source:
         logs.append({
+            "log_type":"ERROR",
             "source": Source,
             "priority": int(Priority),
             "message": NormErrorMessage,
-        })
 
+        }) 
     return logs
 
