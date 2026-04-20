@@ -1,18 +1,19 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { Search, LayoutDashboard, Terminal, Filter, RefreshCw, Download, X } from "lucide-react"
+import { Search, LayoutDashboard, Radio, Terminal, Filter, RefreshCw, Download, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface CommandPaletteProps {
   isOpen: boolean
   onClose: () => void
-  onNavigate: (view: "dashboard" | "terminal") => void
+  onNavigate: (view: "dashboard" | "livelogs" | "terminal") => void
   onAction?: (action: string) => void
 }
 
 const commands = [
   { id: "dashboard", label: "Go to Dashboard", icon: LayoutDashboard, category: "Navigation" },
+  { id: "livelogs", label: "Go to Live Logs", icon: Radio, category: "Navigation" },
   { id: "terminal", label: "Go to Terminal", icon: Terminal, category: "Navigation" },
   { id: "filter-errors", label: "Filter: Errors Only", icon: Filter, category: "Filters" },
   { id: "filter-warnings", label: "Filter: Warnings Only", icon: Filter, category: "Filters" },
@@ -32,7 +33,7 @@ export function CommandPalette({ isOpen, onClose, onNavigate, onAction }: Comman
   )
 
   const handleSelect = useCallback((command: typeof commands[0]) => {
-    if (command.id === "dashboard" || command.id === "terminal") {
+    if (command.id === "dashboard" || command.id === "livelogs" || command.id === "terminal") {
       onNavigate(command.id)
     } else {
       onAction?.(command.id)

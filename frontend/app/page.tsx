@@ -6,9 +6,10 @@ import { Navbar } from "@/components/navbar"
 import { CommandPalette } from "@/components/command-palette"
 import { Dashboard } from "@/components/dashboard"
 import { LogStream } from "@/components/log-stream"
+import { Terminal } from "@/components/terminal"
 
 export default function Home() {
-  const [activeView, setActiveView] = useState<"dashboard" | "terminal">("dashboard")
+  const [activeView, setActiveView] = useState<"dashboard" | "livelogs" | "terminal">("dashboard")
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function Home() {
 
   const handleCommandAction = (action: string) => {
     if (action.startsWith("filter-")) {
-      setActiveView("terminal")
+      setActiveView("livelogs")
     }
   }
 
@@ -35,7 +36,9 @@ export default function Home() {
       <Navbar onOpenCommandPalette={() => setIsCommandPaletteOpen(true)} />
       
       <main className="ml-60 mt-16 flex-1 overflow-auto p-6">
-        {activeView === "dashboard" ? <Dashboard /> : <LogStream />}
+        {activeView === "dashboard" && <Dashboard />}
+        {activeView === "livelogs" && <LogStream />}
+        {activeView === "terminal" && <Terminal />}
       </main>
 
       <CommandPalette

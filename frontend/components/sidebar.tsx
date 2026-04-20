@@ -1,16 +1,17 @@
 "use client"
 
-import { LayoutDashboard, Terminal, Activity } from "lucide-react"
+import { LayoutDashboard, Radio, Terminal, Activity } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface SidebarProps {
-  activeView: "dashboard" | "terminal"
-  onViewChange: (view: "dashboard" | "terminal") => void
+  activeView: "dashboard" | "livelogs" | "terminal"
+  onViewChange: (view: "dashboard" | "livelogs" | "terminal") => void
 }
 
 export function Sidebar({ activeView, onViewChange }: SidebarProps) {
   const navItems = [
     { id: "dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
+    { id: "livelogs" as const, label: "Live Logs", icon: Radio },
     { id: "terminal" as const, label: "Terminal", icon: Terminal },
   ]
 
@@ -18,7 +19,7 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
     <aside className="fixed left-0 top-0 z-40 flex h-full w-60 flex-col border-r border-border bg-sidebar">
       <div className="flex h-16 items-center gap-2 px-6">
         <Activity className="h-5 w-5 text-primary" />
-        <span className="font-semibold text-sidebar-foreground">LogStream</span>
+        <span className="font-semibold text-sidebar-foreground">LogMaster</span>
       </div>
       
       <nav className="flex-1 px-3 py-4">
